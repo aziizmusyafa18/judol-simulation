@@ -1,0 +1,19 @@
+{
+  "name": "judol-system-simulation",
+  "version": "1.0.0",
+  "description": "Simulasi Edukatif Arsitektur Slot Engine (Frontend) dan RMS Telemetri (Backend Operator)",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "npx vercel --prod"
+  },
+  "keywords": [
+    "simulation",
+    "slot-engine",
+    "rms",
+    "risk-management",
+    "education"
+  ],
+  "author": "ITAMA",
+  "license": "MIT"
+}

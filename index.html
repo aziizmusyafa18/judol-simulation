@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Arsitektur Simulasi Slot & RMS Operator (Full-Stack)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Realistic Casino Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-50 shadow-lg">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-amber-500 via-indigo-600 to-purple-600 p-2.5 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid fa-microchip text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-black text-sm sm:text-base text-slate-100 tracking-tight flex items-center gap-2">
+                    <span class="gold-gradient-text font-cinzel">ZEUS OLYMPUS</span> SYSTEM ARCHITECTURE
+                    <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono font-normal">v3.0 Production Demo</span>
+                </h1>
+                <p class="text-[11px] text-slate-400">Simulasi Arsitektur Slot Engine (Frontend) vs Telemetri RMS Risk Management (Backend Operator)</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <!-- Global Target RTP -->
+            <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
+                <span id="globalRtpStatusDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-slate-400">Target RMS RTP: <strong id="globalRtpHeader" class="text-emerald-400">92.0%</strong></span>
+            </div>
+
+            <!-- Sound Mute/Unmute Toggle -->
+            <button id="soundBtn" onclick="toggleSound()" title="Aktifkan/Matikan Suara Audio API" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-xl border border-slate-700 transition cursor-pointer text-sm">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+
+            <!-- Reset Engine Button -->
+            <button onclick="resetSystem()" class="bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 text-slate-300 text-xs px-3 py-2 rounded-xl border border-slate-700 transition flex items-center space-x-1.5 cursor-pointer shadow-sm">
+                <i class="fa-solid fa-rotate-right text-indigo-400"></i>
+                <span class="font-semibold">Reset System</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-5 grid grid-cols-1 xl:grid-cols-12 gap-5">
+
+        <!-- ============================================================== -->
+        <!-- LEFT COLUMN: FRONTEND PLAYER CLIENT (PLATFORM JUDOL) (5 COLS)  -->
+        <!-- ============================================================== -->
+        <section class="xl:col-span-5 space-y-4 flex flex-col">
+            
+            <!-- Player Session & Perspective Switcher -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl">
+                <div class="flex items-center justify-between mb-2.5">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 font-cinzel">
+                        <i class="fa-solid fa-gamepad text-indigo-400"></i> Platform Game Client
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-mono bg-slate-950 px-2.5 py-0.5 rounded-full border border-slate-800">Domain: zeus-gacor88.vip</span>
+                </div>
+
+                <!-- User Profile Tabs -->
+                <div class="grid grid-cols-3 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800">
+                    <button onclick="switchUser('User A')" id="tab-User-A" class="py-2 px-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg border border-indigo-400/50 cursor-pointer">
+                        <span class="tracking-wide">User A</span>
+                        <span class="text-[9px] font-normal opacity-85" id="tabStatus-User-A">HOOKING</span>
+                    </button>
+                    <button onclick="switchUser('User B')" id="tab-User-B" class="py-2 px-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-slate-800 cursor-pointer">
+                        <span class="tracking-wide">User B</span>
+                        <span class="text-[9px] font-normal opacity-85" id="tabStatus-User-B">MILKING</span>
+                    </button>
+                    <button onclick="switchUser('User C')" id="tab-User-C" class="py-2 px-2 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-slate-800 cursor-pointer">
+                        <span class="tracking-wide">User C</span>
+                        <span class="text-[9px] font-normal opacity-85" id="tabStatus-User-C">RETENTION</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Realistic Slot Machine Cabinet -->
+            <div class="slot-cabinet rounded-2xl p-4 sm:p-5 shadow-2xl relative flex-1 flex flex-col justify-between overflow-hidden">
+                
+                <!-- Floating Zeus Multiplier Badge -->
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[11px] font-bold text-amber-300 font-cinzel tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-yellow-400"></i> ZEUS 5x3 OLYMPUS
+                        </span>
+                        <span id="userStageBadge" class="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-mono">
+                            Hook Phase (Gacor)
+                        </span>
+                    </div>
+
+                    <!-- Dynamic Multiplier Indicator -->
+                    <div id="multiplierBadge" class="hidden multiplier-pill px-3 py-1 rounded-full text-xs font-black text-slate-950 font-orbitron tracking-wider">
+                        PETIR 5X!
+                    </div>
+                </div>
+
+                <!-- Active Account Balance Bar -->
+                <div class="bg-slate-950/85 p-3 rounded-xl border border-slate-800/80 mb-3 flex items-center justify-between shadow-inner">
+                    <div>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Akun Pemain Aktif</span>
+                        <strong id="activeUserLabel" class="text-xs sm:text-sm text-slate-100 font-bold">User A (New Depositor)</strong>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-semibold">Saldo Dompet</span>
+                        <strong id="activeUserBalance" class="text-sm sm:text-base text-emerald-400 font-mono font-black">Rp 1.000.000</strong>
+                    </div>
+                </div>
+
+                <!-- 5x3 Video Slot Reel Display Area -->
+                <div class="reel-glass rounded-xl p-3 border-2 border-indigo-950 shadow-inner mb-3">
+                    <!-- 5 Columns Grid -->
+                    <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
+                        <div id="reel-col-0" class="reel-column"></div>
+                        <div id="reel-col-1" class="reel-column"></div>
+                        <div id="reel-col-2" class="reel-column"></div>
+                        <div id="reel-col-3" class="reel-column"></div>
+                        <div id="reel-col-4" class="reel-column"></div>
+                    </div>
+
+                    <!-- Result Notification Banner -->
+                    <div id="slotDisplayMessage" class="mt-3 text-center text-xs font-semibold py-2 rounded-xl bg-slate-900/60 text-slate-400 border border-slate-800 transition-all">
+                        Pilih nominal taruhan dan tekan SPIN SLOT
+                    </div>
+                </div>
+
+                <!-- Game Controls & Betting Console -->
+                <div class="space-y-3 bg-slate-950/90 p-3.5 sm:p-4 rounded-xl border border-slate-800">
+                    
+                    <!-- Bet Adjuster & Quick Presets -->
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-xs text-slate-400 font-medium">Bet:</span>
+                            <button onclick="adjustBet(-10000)" class="w-7 h-7 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 text-slate-200 font-bold flex items-center justify-center cursor-pointer transition">-</button>
+                            <span id="currentBetText" class="font-mono font-black text-amber-400 text-xs sm:text-sm px-2">Rp 50.000</span>
+                            <button onclick="adjustBet(10000)" class="w-7 h-7 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 text-slate-200 font-bold flex items-center justify-center cursor-pointer transition">+</button>
+                        </div>
+
+                        <!-- Quick Bet Buttons -->
+                        <div class="flex items-center space-x-1 text-[11px] font-mono">
+                            <button onclick="setQuickBet(10000)" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 cursor-pointer">10k</button>
+                            <button onclick="setQuickBet(25000)" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 cursor-pointer">25k</button>
+                            <button onclick="setQuickBet(50000)" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 cursor-pointer">50k</button>
+                            <button onclick="setQuickBet(100000)" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 rounded border border-slate-800 text-slate-300 cursor-pointer">100k</button>
+                        </div>
+                    </div>
+
+                    <!-- Max Bet Dynamic Warning from RMS -->
+                    <div id="maxBetWarning" class="hidden bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] p-2 rounded-lg flex items-center justify-between">
+                        <span><i class="fa-solid fa-shield-halved mr-1"></i> Taruhan dibatasi server RMS:</span>
+                        <strong id="maxBetLimitValue" class="font-mono">Rp 100.000</strong>
+                    </div>
+
+                    <!-- Spin Triggers, Turbo, & Auto Spin Actions -->
+                    <div class="grid grid-cols-4 gap-2 pt-1">
+                        <!-- Main Spin Button -->
+                        <button id="spinBtn" onclick="executeSpin()" class="col-span-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black py-3 px-3 rounded-xl shadow-lg shadow-emerald-950/60 transition transform active:scale-95 text-xs sm:text-sm flex items-center justify-center space-x-2 cursor-pointer">
+                            <i class="fa-solid fa-play"></i>
+                            <span>SPIN SLOT</span>
+                        </button>
+
+                        <!-- Turbo Spin Toggle -->
+                        <button id="turboBtn" onclick="toggleTurbo()" class="bg-slate-800 text-slate-400 border border-slate-700 rounded-xl px-2 py-2 text-[11px] font-bold flex flex-col items-center justify-center cursor-pointer transition">
+                            <i class="fa-solid fa-forward-fast text-xs mb-0.5"></i>
+                            <span>TURBO</span>
+                        </button>
+
+                        <!-- Auto Spin Trigger -->
+                        <button id="autoSpinBtn" onclick="startAutoSpin(10)" class="bg-slate-800 text-slate-400 border border-slate-700 rounded-xl px-2 py-2 text-[11px] font-bold flex flex-col items-center justify-center cursor-pointer transition">
+                            <i class="fa-solid fa-arrows-rotate text-xs mb-0.5"></i>
+                            <span>AUTO 10x</span>
+                        </button>
+                    </div>
+
+                    <!-- Auxiliary Player Actions (Deposit, Withdraw, Max Win Trigger) -->
+                    <div class="grid grid-cols-3 gap-2 pt-1">
+                        <button onclick="openDepositModal()" class="py-1.5 px-2 bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-700/60 text-indigo-300 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-wallet"></i> Top-Up / Deposit
+                        </button>
+                        <button onclick="openWithdrawModal()" class="py-1.5 px-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-money-bill-transfer"></i> Tarik Dana (WD)
+                        </button>
+                        <button id="maxWinTriggerBtn" onclick="triggerMaxWin()" class="py-1.5 px-2 bg-rose-950/60 hover:bg-rose-900 border border-rose-700/60 text-rose-300 rounded-lg text-[10px] font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-bolt"></i> <span id="maxWinBtnLabel">Pemicu Max Win</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ====================================================================== -->
+        <!-- RIGHT COLUMN: BACKEND RMS OPERATOR TELEMETRY & AUDIT (7 COLS)          -->
+        <!-- ====================================================================== -->
+        <section class="xl:col-span-7 space-y-4">
+            
+            <!-- Operator Control & Global Strategy Panel -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl relative">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2 font-mono">
+                        <i class="fa-solid fa-sliders text-amber-400"></i> RMS Backend Operator Console
+                    </span>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] text-slate-400">Algorithmic Mode:</span>
+                        <span id="backendStatusBadge" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs rounded-full font-bold">
+                            RMS_DYNAMIC
+                        </span>
+                    </div>
+                </div>
+
+                <!-- RMS Strategy Preset Toggles -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+                    <button onclick="setRMSMode('RMS_DYNAMIC')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-left cursor-pointer transition">
+                        <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> RMS Dynamic
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Siklus riil judol: Pancingan gacor lalu sedot bertahap.</p>
+                    </button>
+
+                    <button onclick="setRMSMode('FAIR')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-indigo-500/50 text-left cursor-pointer transition">
+                        <div class="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-scale-balanced"></i> Fair Math (96% RTP)
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-0.5">RNG teoritis murni standar kasino internasional legal.</p>
+                    </button>
+
+                    <button onclick="setRMSMode('EXTREME_DRAIN')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-rose-500/50 text-left cursor-pointer transition">
+                        <div class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-skull-crossbones"></i> Extreme Extraction
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Mode sedot agresif (RTP 65%) pemulihan liability bandar.</p>
+                    </button>
+                </div>
+
+                <!-- Daily Bankroll Liability Meter -->
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-400">Plafon Liabilitas Payout Harian Bandar (Max Loss Cap):</span>
+                        <span class="font-bold font-mono text-slate-200">Rp 500.000.000</span>
+                    </div>
+
+                    <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-slate-800">
+                        <div id="payoutProgressBar" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 h-full rounded-full transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-emerald-400 font-bold" id="totalPayoutSpent">Kewajiban Payout: Rp 0</span>
+                        <span class="text-slate-400" id="totalPayoutRemaining">Sisa Plafon: Rp 500.000.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Psychological Telemetry & Exploitation Metrics -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                        <i class="fa-solid fa-brain text-purple-400"></i> Telemetri Manipulasi Psikologis Pemain
+                    </h3>
+                    <span class="text-[10px] text-purple-400 font-mono bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded-full">Dopamine Exploitation Metrics</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <!-- Near-Miss Count -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center text-[10px] text-purple-300 mb-1">
+                            <span>Near-Miss (Nyaris)</span>
+                            <i class="fa-solid fa-bolt text-purple-400"></i>
+                        </div>
+                        <div id="nearMissCount" class="text-lg font-black font-mono text-purple-400">0</div>
+                        <p class="text-[9px] text-slate-500 mt-1">2 Scatter palsu pemancing dopamin</p>
+                    </div>
+
+                    <!-- LDW Count -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center text-[10px] text-amber-300 mb-1">
+                            <span>LDW Effect</span>
+                            <i class="fa-solid fa-masks-theater text-amber-400"></i>
+                        </div>
+                        <div id="ldwCount" class="text-lg font-black font-mono text-amber-400">0</div>
+                        <p class="text-[9px] text-slate-500 mt-1">Kalah berkedok menang (payout &lt; bet)</p>
+                    </div>
+
+                    <!-- Clean Wins -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center text-[10px] text-emerald-300 mb-1">
+                            <span>Menang Bersih</span>
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        </div>
+                        <div id="cleanWinsCount" class="text-lg font-black font-mono text-emerald-400">0</div>
+                        <p class="text-[9px] text-slate-500 mt-1">Kemenangan organik riil</p>
+                    </div>
+
+                    <!-- Pure Losses -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center text-[10px] text-rose-300 mb-1">
+                            <span>Kalah Mutlak</span>
+                            <i class="fa-solid fa-circle-xmark text-rose-400"></i>
+                        </div>
+                        <div id="pureLossesCount" class="text-lg font-black font-mono text-rose-400">0</div>
+                        <p class="text-[9px] text-slate-500 mt-1">House Edge diserap sistem</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Chart.js Visualizations (RTP Telemetry & GGR) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- RTP Telemetry Curve -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-line text-indigo-400"></i> Telemetri RTP Real-time
+                        </h4>
+                        <span class="text-[10px] text-slate-500 font-mono">Running Window</span>
+                    </div>
+                    <div class="h-44 w-full relative">
+                        <canvas id="rtpChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- GGR & Cashflow Breakdown -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-simple text-emerald-400"></i> Cashflow & House Margin
+                        </h4>
+                        <span class="text-[10px] font-mono text-emerald-400 font-bold" id="ggrProfitText">Rp 0</span>
+                    </div>
+                    <div class="h-44 w-full relative">
+                        <canvas id="ggrChartCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Profiling Matrix & Behavioral Risk Scoring -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                        <i class="fa-solid fa-address-card text-indigo-400"></i> Matriks Profil Pemain & Scoring Risiko RMS
+                    </h3>
+                    <span class="text-[10px] text-slate-500 font-mono">Total Turnover: <strong id="totalTurnoverText" class="text-slate-300">Rp 0</strong></span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="playerProfileGrid">
+                    <!-- User A Profile -->
+                    <div id="profile-User-A" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <strong class="text-xs text-slate-200 block">User A</strong>
+                                <span class="text-[9px] text-slate-500">New Depositor / VIP</span>
+                            </div>
+                            <span id="badge-User-A" class="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded font-bold border border-purple-500/30">Hook Phase</span>
+                        </div>
+                        <div class="text-[11px] font-mono space-y-1 text-slate-400 border-t border-slate-900 pt-2">
+                            <div class="flex justify-between"><span>Payout Didapat:</span> <strong id="payoutVal-User-A" class="text-slate-200">Rp 0</strong></div>
+                            <div class="flex justify-between"><span>Target RTP:</span> <strong id="rtpVal-User-A" class="text-purple-400">115.0%</strong></div>
+                            <div class="flex justify-between"><span>Batas Max Bet:</span> <strong id="limitVal-User-A" class="text-slate-300">Rp 500.000</strong></div>
+                            <div class="flex justify-between"><span>Aktivitas:</span> <strong id="spins-User-A" class="text-slate-400">0 spin</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- User B Profile -->
+                    <div id="profile-User-B" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <strong class="text-xs text-slate-200 block">User B</strong>
+                                <span class="text-[9px] text-slate-500">Regular Grinder</span>
+                            </div>
+                            <span id="badge-User-B" class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold border border-amber-500/30">Extraction</span>
+                        </div>
+                        <div class="text-[11px] font-mono space-y-1 text-slate-400 border-t border-slate-900 pt-2">
+                            <div class="flex justify-between"><span>Payout Didapat:</span> <strong id="payoutVal-User-B" class="text-slate-200">Rp 0</strong></div>
+                            <div class="flex justify-between"><span>Target RTP:</span> <strong id="rtpVal-User-B" class="text-amber-400">82.5%</strong></div>
+                            <div class="flex justify-between"><span>Batas Max Bet:</span> <strong id="limitVal-User-B" class="text-slate-300">Rp 250.000</strong></div>
+                            <div class="flex justify-between"><span>Aktivitas:</span> <strong id="spins-User-B" class="text-slate-400">0 spin</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- User C Profile -->
+                    <div id="profile-User-C" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <strong class="text-xs text-slate-200 block">User C</strong>
+                                <span class="text-[9px] text-slate-500">Low Balance Player</span>
+                            </div>
+                            <span id="badge-User-C" class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold border border-emerald-500/30">Retention</span>
+                        </div>
+                        <div class="text-[11px] font-mono space-y-1 text-slate-400 border-t border-slate-900 pt-2">
+                            <div class="flex justify-between"><span>Payout Didapat:</span> <strong id="payoutVal-User-C" class="text-slate-200">Rp 0</strong></div>
+                            <div class="flex justify-between"><span>Target RTP:</span> <strong id="rtpVal-User-C" class="text-emerald-400">78.0%</strong></div>
+                            <div class="flex justify-between"><span>Batas Max Bet:</span> <strong id="limitVal-User-C" class="text-slate-300">Rp 100.000</strong></div>
+                            <div class="flex justify-between"><span>Aktivitas:</span> <strong id="spins-User-C" class="text-slate-400">0 spin</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Audit Stream & Real-time Event Log -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-2">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                        <i class="fa-solid fa-terminal text-indigo-400"></i> Audit Trail & Telemetri Server Real-time
+                    </h3>
+                    <button onclick="clearTerminal()" class="text-[10px] text-slate-500 hover:text-slate-300 transition cursor-pointer">Bersihkan Log</button>
+                </div>
+
+                <div id="terminalLog" class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 h-44 overflow-y-auto font-mono text-[11px] space-y-1 text-slate-300 divide-y divide-slate-900">
+                    <div class="p-1.5 text-slate-500 font-mono text-[10px]">[SYSTEM BOOT] Gateway RMS Aktif. Daily Maximum Liability Rp 500.000.000. Memulai pemantauan telemetri...</div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900/90 border-t border-slate-800 py-3 px-6 text-center text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
+        <span>Simulasi Arsitektur Perjudian Online &bull; Dibuat untuk Edukasi Analisis Rekayasa Perangkat Lunak & Algoritma Manipulasi Peluang</span>
+        <span class="text-[11px] font-mono text-slate-600">Simulated Safe Environment (No Real Money Involved)</span>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
